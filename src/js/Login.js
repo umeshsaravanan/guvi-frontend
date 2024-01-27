@@ -141,7 +141,7 @@ const Login = () => {
           </div>
         </div>
         <button type='submit' className='btn btn-primary d-block my-3 mx-auto col-6 '>
-        {isLoading ? "Loading..." : "sign in"}</button>
+        {isLoading ? "Loading..." : "sign up"}</button>
         <p>Already have an account? <span onClick={handleClick}>click here</span></p>
         {error && <p className='text-danger d-6'>{error}</p>}
       </form>}
