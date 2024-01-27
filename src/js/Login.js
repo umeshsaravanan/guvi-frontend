@@ -14,6 +14,7 @@ const Login = () => {
   const [confPassword, setConfPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfPassword, setShowConfPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
@@ -35,7 +36,7 @@ const Login = () => {
 
   const handleSignin = (e) => {
     e.preventDefault();
-
+    setIsLoading(true);
     if (password === confPassword) {
         setError("");
         Axios.post(`${process.env.REACT_APP_BACKEND_URL}/add`, {
@@ -48,6 +49,7 @@ const Login = () => {
             setIsLoggedin(true);
           else  
             setError(response.data); 
+          setIsLoading(false);
         })
         .catch((error) => {
             if (error.response) {
@@ -63,25 +65,30 @@ const Login = () => {
     } else {
         setError("Both passwords must match");
     }
+    setIsLoading(false);
 };
 
 
 
   const handleLogin = (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError("");
     Axios.post(`${process.env.REACT_APP_BACKEND_URL}/verify`, {
       userName: username,
       Password: password
     })
       .then((response) => {
         if (response.data.message === "Valid User") {
-          setError("");
           navigate(`/${response.data.id}`);
         }
-        else
+        else{
           setError("Invalid Credentials...");
+        }
+        setIsLoading(false);
       })
       .catch((err) => {
+        setIsLoading(false);
         console.log(err);
       })
   }
@@ -132,7 +139,8 @@ const Login = () => {
             </span>
           </div>
         </div>
-        <button type='submit' className='btn btn-primary d-block my-3 mx-auto col-6 '>sign in</button>
+        <button type='submit' className='btn btn-primary d-block my-3 mx-auto col-6 '>
+        {isLoading ? "Loading..." : "sign in"}</button>
         <p>Already have an account? <span onClick={handleClick}>click here</span></p>
         {error && <p className='text-danger d-6'>{error}</p>}
       </form>}
@@ -158,7 +166,8 @@ const Login = () => {
             </span>
           </div>
         </div>
-        <button className='btn btn-primary d-block my-3 mx-auto col-6' onSubmit={() => handleLogin()}>Log in</button>
+        <button className='btn btn-primary d-block my-3 mx-auto col-6' onSubmit={() => handleLogin()}>
+        {isLoading ? "Loading..." : "Log in"}</button>
         <p>Don't have an account? <span onClick={handleCreateClick}>Create Now</span></p>
         {error && <p className='text-danger d-6'>{error}</p>}
       </form>
