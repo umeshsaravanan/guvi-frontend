@@ -61,11 +61,12 @@ const Login = () => {
             } else {
                 setError("Network error. Please try again.");
             }
+            setIsLoading(false);
         });
     } else {
         setError("Both passwords must match");
+        setIsLoading(false);
     }
-    setIsLoading(false);
 };
 
 
